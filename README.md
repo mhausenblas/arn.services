@@ -1,6 +1,10 @@
 # arn.services
 
-A utility service for Amazon Resource Names ([ARNs](https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html)), providing the following:
+A utility service for Amazon Resource Names ([ARNs](https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html)), providing the functionality 
+as listed below.
+
+You can consume it as an online service via `arn.services` or run yourself as a
+Kubernetes deployment.
 
 ## Compartmentalize
 
