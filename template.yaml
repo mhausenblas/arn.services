@@ -1,0 +1,50 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: ARN services
+
+Globals:
+  Function:
+    Timeout: 30
+  Api:
+    Cors:
+      AllowMethods: "'*'"
+      AllowHeaders: "'*'"
+      AllowOrigin: "'*'"
+
+Resources:
+  ExplodeFunc:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: bin/
+      Handler: explode
+      Runtime: go1.x
+      Tracing: Active
+      Events:
+        Mutate:
+          Type: Api
+          Properties:
+            Path: /explode
+            Method: GET
+      Policies:
+        - AWSLambdaExecute
+
+  GenerateFunc:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: bin/
+      Handler: generate
+      Runtime: go1.x
+      Tracing: Active
+      Events:
+        Mutate:
+          Type: Api
+          Properties:
+            Path: /generate
+            Method: POST
+      Policies:
+        - AWSLambdaExecute
+
+Outputs:
+  ASEndpoint:
+    Description: "The ASN services HTTP API Gateway endpoint"
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod"
