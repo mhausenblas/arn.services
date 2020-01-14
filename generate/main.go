@@ -29,10 +29,12 @@ func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyRespo
 	if err != nil {
 		return serverError(fmt.Errorf("Can't parse %v as an ARN due to: %v", request.Body, err))
 	}
+	fmt.Printf("%+v\n", a)
 	// a somewhat sensible defaulting for fields:
 	switch {
 	case a.Partition == "":
 		a.Partition = "aws"
+		fallthrough
 	// NB this has to be fixed to take non-regional services such as IAM into
 	// account, but for now let's keep it simple:
 	case a.Region == "":
