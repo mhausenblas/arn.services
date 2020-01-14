@@ -5,7 +5,7 @@ as listed below.
 
 You can consume it as an online service via `arn.services` or run yourself as a
 [SAM application](https://aws.amazon.com/serverless/sam/). For the former, I'm
-[currently working on it](https://github.com/mhausenblas/arn.services/issues/1) and for the latter you need to: 1. create and S3 bucket for the Lambda functions, 2. change the value of `ARNS_BUCKET` in the [Makefile](https://github.com/mhausenblas/arn.services/blob/master/Makefile), and 3. do a `make deploy`.
+[currently working on it](https://github.com/mhausenblas/arn.services/issues/1) and for the latter you need to: 1. clone this repo, 2. create an S3 bucket for the Lambda functions, 3. change the value of `ARNS_BUCKET` to your own S3 bucket in the [Makefile](https://github.com/mhausenblas/arn.services/blob/master/Makefile), and 4. execute `make deploy`.
 
 ## Compartmentalize
 
