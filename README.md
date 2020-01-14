@@ -4,7 +4,7 @@ A utility service for Amazon Resource Names ([ARNs](https://docs.aws.amazon.com/
 as listed below.
 
 You can consume it as an online service via `arn.services` or run yourself as a
-Kubernetes deployment.
+[SAM application](https://aws.amazon.com/serverless/sam/).
 
 ## Compartmentalize
 
@@ -13,10 +13,11 @@ In order to compartmentalize an ARN, that is, to decompose it into its parts, us
 ```sh
 $ curl arn.services/explode/arn:aws:s3:us-west-2::abucket
 {
-  "partition": "aws",
-  "service": "s3",
-  "region": "us-west-2",
-  "resource-id": "abucket"
+  "Partition": "aws",
+  "Service": "s3",
+  "Region": "us-west-2",
+  "AccountID": "",
+  "Resource": "abucket"
 }
 ```
 

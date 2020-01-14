@@ -23,7 +23,7 @@ Resources:
         Mutate:
           Type: Api
           Properties:
-            Path: /explode
+            Path: /explode/{arnstr}
             Method: GET
       Policies:
         - AWSLambdaExecute

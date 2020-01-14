@@ -1,10 +1,10 @@
 ARNS_BUCKET?=arnservices-code
 ARNS_STACK?=arnservices
-# APIGATEWAY_ENDPOINT:=$(shell aws cloudformation describe-stacks --stack-name ${ARNS_STACK} --query "Stacks[0].Outputs[?OutputKey=='ASEndpoint'].OutputValue" --output text)
+APIGATEWAY_ENDPOINT:=$(shell aws cloudformation describe-stacks --stack-name ${ARNS_STACK} --query "Stacks[0].Outputs[?OutputKey=='ASEndpoint'].OutputValue" --output text)
 EXPLODE_ENDPOINT:=${APIGATEWAY_ENDPOINT}/explode
 GENERATE_WEBHOOK_ENDPOINT:=${APIGATEWAY_ENDPOINT}/generate
 
-.PHONY: build buildexplode buildgenerate up deploy destroy status
+.PHONY: build buildexplode buildgenerate up deploy test destroy status
 
 build: buildexplode buildgenerate
 
@@ -19,6 +19,9 @@ up:
 	sam deploy --template-file current-stack.yaml --stack-name arnservices --capabilities CAPABILITY_IAM
 
 deploy: build up
+
+test:
+	curl ${EXPLODE_ENDPOINT}/arn:aws:s3:us-west-2::abucket
 
 destroy:
 	aws cloudformation delete-stack --stack-name ${ARNS_STACK}

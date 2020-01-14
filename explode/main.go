@@ -23,17 +23,24 @@ func serverError(err error) (events.APIGatewayProxyResponse, error) {
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	fmt.Printf("START EXPLODE FUNC\n")
-	as := request.Path
+	as, ok := request.PathParameters["arnstr"]
+	if !ok {
+		return serverError(fmt.Errorf("No input provided"))
+	}
+	if !arn.IsARN(as) {
+		return serverError(fmt.Errorf("Need an ARN to operate on"))
+	}
+	fmt.Printf("Input ARN: %v\n", as)
 	a, err := arn.Parse(as)
 	if err != nil {
-		return serverError(err)
+		return serverError(fmt.Errorf("Can't parse %v as an ARN due to: %v", as, err))
 	}
-	fmt.Printf("END EXPLODE FUNC\n")
 	ajson, err := json.Marshal(a)
 	if err != nil {
-		return serverError(fmt.Errorf("Can't marshal result: %v", err))
+		return serverError(fmt.Errorf("Can't marshal result due to %v", err))
 	}
 	fmt.Println(string(ajson))
+	fmt.Printf("END EXPLODE FUNC\n")
 	return events.APIGatewayProxyResponse{
 		StatusCode: http.StatusOK,
 		Headers: map[string]string{
