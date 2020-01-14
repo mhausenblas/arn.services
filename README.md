@@ -28,7 +28,7 @@ If you have (certain) components of an ARN and want to generate a fully qualifie
 ```sh
 $ curl -X POST \
        -H "Content-Type: application/json"
-       -d '{"service":"s3", "resource-id":"somebucket/someobject"}' \
+       -d '{"Service":"s3", "Resource":"somebucket/someobject"}' \
        arn.services/generate
 arn:aws:s3:us-west-2::somebucket/someobject
 ```

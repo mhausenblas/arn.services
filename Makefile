@@ -2,9 +2,9 @@ ARNS_BUCKET?=arnservices-code
 ARNS_STACK?=arnservices
 APIGATEWAY_ENDPOINT:=$(shell aws cloudformation describe-stacks --stack-name ${ARNS_STACK} --query "Stacks[0].Outputs[?OutputKey=='ASEndpoint'].OutputValue" --output text)
 EXPLODE_ENDPOINT:=${APIGATEWAY_ENDPOINT}/explode
-GENERATE_WEBHOOK_ENDPOINT:=${APIGATEWAY_ENDPOINT}/generate
+GENERATE_ENDPOINT:=${APIGATEWAY_ENDPOINT}/generate
 
-.PHONY: build buildexplode buildgenerate up deploy test destroy status
+.PHONY: build buildexplode buildgenerate up deploy test testexp testgen destroy status
 
 build: buildexplode buildgenerate
 
@@ -20,8 +20,15 @@ up:
 
 deploy: build up
 
-test:
-	curl ${EXPLODE_ENDPOINT}/arn:aws:s3:us-west-2::abucket
+testexp:
+	curl -s ${EXPLODE_ENDPOINT}/arn:aws:s3:us-west-2::abucket | jq .
+	@printf '\n\e[1;42m%s\e[m\n\n' "explode test done"
+
+testgen:
+	curl -s -X POST -H "Content-Type: application/json" -d '{"Service":"s3", "Resource":"somebucket/someobject"}' ${GENERATE_ENDPOINT}
+	@printf '\n\e[1;42m%s\e[m\n' "generate test done"
+
+test: testexp testgen
 
 destroy:
 	aws cloudformation delete-stack --stack-name ${ARNS_STACK}

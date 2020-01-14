@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/aws/aws-sdk-go/aws/arn"
+
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/aws/aws-sdk-go/aws/arn"
 )
 
 func serverError(err error) (events.APIGatewayProxyResponse, error) {
@@ -22,25 +23,29 @@ func serverError(err error) (events.APIGatewayProxyResponse, error) {
 }
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	fmt.Printf("START EXPLODE FUNC\n")
-	as := request.Path
-	a, err := arn.Parse(as)
+	fmt.Printf("START GENERATE FUNC\n")
+	a := arn.ARN{}
+	err := json.Unmarshal([]byte(request.Body), &a)
 	if err != nil {
-		return serverError(err)
+		return serverError(fmt.Errorf("Can't parse %v as an ARN due to: %v", request.Body, err))
 	}
-	fmt.Printf("END EXPLODE FUNC\n")
-	ajson, err := json.Marshal(a)
-	if err != nil {
-		return serverError(fmt.Errorf("Can't marshal result: %v", err))
+	// a somewhat sensible defaulting for fields:
+	switch {
+	case a.Partition == "":
+		a.Partition = "aws"
+	// NB this has to be fixed to take non-regional services such as IAM into
+	// account, but for now let's keep it simple:
+	case a.Region == "":
+		a.Region = "us-west-2"
 	}
-	fmt.Println(string(ajson))
+	fmt.Printf("END GENERATE FUNC\n")
 	return events.APIGatewayProxyResponse{
 		StatusCode: http.StatusOK,
 		Headers: map[string]string{
 			"Access-Control-Allow-Origin": "*",
-			"Content-Type":                "application/json",
+			"Content-Type":                "text/plain",
 		},
-		Body: string(ajson),
+		Body: a.String(),
 	}, nil
 }
 
