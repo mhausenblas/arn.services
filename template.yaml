@@ -28,11 +28,12 @@ Resources:
       Runtime: go1.x
       Tracing: Active
       Events:
-        Mutate:
+        ApiEvent:
           Type: Api
           Properties:
             Path: /explode/{arnstr}
             Method: GET
+            RestApiId: !Ref TheProdAPI
       Policies:
         - AWSLambdaExecute
 
@@ -44,11 +45,12 @@ Resources:
       Runtime: go1.x
       Tracing: Active
       Events:
-        Mutate:
+        ApiEvent:
           Type: Api
           Properties:
             Path: /generate
             Method: POST
+            RestApiId:  !Ref TheProdAPI
       Policies:
         - AWSLambdaExecute
 
@@ -56,12 +58,13 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       OpenApiVersion: 3.0.1
-      StageName: Prod
+      StageName: prod
       Domain:
         DomainName: !Ref DomainName
         CertificateArn: !Ref ACMCertificateArn
+        EndpointConfiguration: REGIONAL
 
 Outputs:
   ASEndpoint:
     Description: "The ASN services HTTP API Gateway endpoint"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod"
+    Value: !Sub "https://${TheProdAPI}.execute-api.${AWS::Region}.amazonaws.com/prod"
