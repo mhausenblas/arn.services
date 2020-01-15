@@ -15,3 +15,4 @@
 .DS_Store
 current-stack.yaml
 bin
+/custom-domain-param.sh

@@ -4,6 +4,7 @@ APIGATEWAY_ENDPOINT:=$(shell aws cloudformation describe-stacks --stack-name ${A
 EXPLODE_ENDPOINT:=${APIGATEWAY_ENDPOINT}/explode
 GENERATE_ENDPOINT:=${APIGATEWAY_ENDPOINT}/generate
 
+
 .PHONY: build buildexplode buildgenerate up deploy test testexp testgen destroy status
 
 build: buildexplode buildgenerate
@@ -16,7 +17,7 @@ buildgenerate:
 
 up: 
 	sam package --template-file template.yaml --output-template-file current-stack.yaml --s3-bucket ${ARNS_BUCKET}
-	sam deploy --template-file current-stack.yaml --stack-name arnservices --capabilities CAPABILITY_IAM
+	sam deploy --template-file current-stack.yaml --stack-name arnservices --capabilities CAPABILITY_IAM --parameter-overrides ACMCertificateArn="${ARNS_ACM_CERT}"
 
 deploy: build up
 
