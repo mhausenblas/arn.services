@@ -23,8 +23,6 @@ func serverError(err error) (events.APIGatewayProxyResponse, error) {
 
 func handler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	fmt.Printf("START EXPLODE FUNC\n")
-	// NB that the following currently craps out with resources that use a `/`
-	// to separate resource type and ID, for example, IAM for user/abc:
 	as, ok := request.PathParameters["arnstr"]
 	if !ok {
 		return serverError(fmt.Errorf("No input provided"))
