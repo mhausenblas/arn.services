@@ -12,7 +12,7 @@ You can consume it as an online service via `arn.services` or run yourself as a
 In order to compartmentalize an ARN, that is, to decompose it into its parts, use a `GET` on `explode/$ARN`, for example:
 
 ```sh
-$ curl -s arn.services/explode/arn:aws:s3:us-west-2::abucket | jq .
+$ curl -s https://arn.services/explode/arn:aws:s3:us-west-2::abucket | jq .
 {
   "Partition": "aws",
   "Service": "s3",
@@ -28,8 +28,8 @@ If you have (certain) components of an ARN and want to generate a fully qualifie
 
 ```sh
 $ curl -s -X POST \
-       -H "Content-Type: application/json"
+       -H "Content-Type: application/json" \
        -d '{"Service":"s3", "Resource":"somebucket/someobject"}' \
-       arn.services/generate
+       https://arn.services/generate
 arn:aws:s3:us-west-2::somebucket/someobject
 ```
